@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <windows.h>
-#define COLOR_RED	"\033[38;2;255;0;0m"
 
 int check;
 
