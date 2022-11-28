@@ -1,0 +1,3 @@
+D:/CLionProjects/3p6mok/cmake-build-debug/CMakeFiles/3p6mok.dir
+D:/CLionProjects/3p6mok/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/CLionProjects/3p6mok/cmake-build-debug/CMakeFiles/rebuild_cache.dir
