@@ -184,7 +184,7 @@ void game() {
     do {
         clearconsole();
         check = 1;
-        turn = 0;
+        turn = 1;
         int board[19][19] = { 0 };
         draw_board();
         while (1) {
