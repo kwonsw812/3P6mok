@@ -126,7 +126,7 @@ unsigned int WINAPI server_thread(void *arg) {
             handle_arr[i] = sock_arr[i].ev;
         }
 
-        printf(".");
+        // printf(".");
 
         index = WSAWaitForMultipleEvents(
                 total_socket_count, handle_arr, false, INFINITE, false);
@@ -236,6 +236,7 @@ char *get_client_ip(int index) {
 }
 
 int notify_client(char *message) {
+  printf("\nmessage:%s\n", message);
     for (int i = 1; i < total_socket_count; ++i) {
         send(sock_arr[i].s, message, DEFAULT_BUF_LEN, 0);
     }
