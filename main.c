@@ -265,12 +265,6 @@ void game() {
       gotoxy(x, y);
       put_stone();
       gotoxy(0, 23);
-      if (check_win(board) == 1) { //y를 입력하면 재시작 이외에는 프로그램 종료
-        gotoxy(65, 10);
-        printf("Regame? y/n: ");
-        scanf(" %c", &loop);
-        break;
-      }
     }
   } while (loop == 'y');
 }
@@ -326,6 +320,11 @@ unsigned int WINAPI service(void *params) {
           parse_board_data(recv_message);
           clearconsole();
           draw_board(board);
+          if(check_win(board)) {
+              gotoxy(0, 23);
+              Sleep(5000);
+              exit(0);
+          }
         }
       } else if (ev.lNetworkEvents == FD_CLOSE) {
         printf("[i] Server has closed\n");
