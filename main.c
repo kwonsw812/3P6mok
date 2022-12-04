@@ -19,12 +19,12 @@ int sock; // 소켓
 int board[19][19] = {0};
 
 void send_turn() {
-  char data = (char)(turn + '0');
-  send(sock, &data, sizeof (data), 0);
+  char data[2] = {'t',(char) (turn + '0')};
+  send(sock, data, sizeof (data), 0);
 }
 
-void parse_turn(const char data) {
-  turn = data - '0';
+void parse_turn(const char data[2]) {
+  turn = data[1] - '0';
 }
 
 void send_board_data(int board[][19]) {
@@ -308,12 +308,12 @@ unsigned int WINAPI service(void *params) {
       WSAEnumNetworkEvents(s, event, &ev);
       if (ev.lNetworkEvents == FD_READ) {
         int len = recv(s, recv_message, MAXWORD, 0);
-        if (len > 2) {
-            parse_board_data(recv_message);
-            clearconsole();
-            draw_board(board);
+        if (*recv_message == 'T') {
+          parse_turn(recv_message);
         } else {
-          parse_turn(*recv_message);
+          parse_board_data(recv_message);
+          clearconsole();
+          draw_board(board);
         }
       } else if (ev.lNetworkEvents == FD_CLOSE) {
         printf("[i] Server has closed\n");
