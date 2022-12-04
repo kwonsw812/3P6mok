@@ -196,6 +196,7 @@ unsigned int WINAPI recv_and_forward(void *arg) {
             strcpy(sock_arr[index].name, tok1 + 1);
         }
 
+        printf("\ndata:%s\n", share_message);
         for (int i = 0; i < total_socket_count; ++i) {
             send(sock_arr[i].s, share_message, MAXWORD, 0);
         }
@@ -206,7 +207,7 @@ unsigned int WINAPI recv_and_forward(void *arg) {
 
 void remove_client(int index) {
     char remove_ip[256];
-    char message[MAXWORD];
+    // char message[MAXWORD];
 
     strcpy(remove_ip, get_client_ip(index));
     printf("[i] Lose connection: %s\n", remove_ip);
@@ -236,7 +237,6 @@ char *get_client_ip(int index) {
 }
 
 int notify_client(char *message) {
-  printf("\nmessage:%s\n", message);
     for (int i = 1; i < total_socket_count; ++i) {
         send(sock_arr[i].s, message, DEFAULT_BUF_LEN, 0);
     }
