@@ -1,5 +1,4 @@
 #define _CRT_SECURE_NO_WARNINGS
-
 #include <stdio.h>
 #include <winsock2.h>
 #include <windows.h>
@@ -36,7 +35,8 @@ void gotoxy(int x, int y) {
 }
 
 //바둑판을 그리는 함수
-void draw_board() {
+void draw_board(int array[][19]) {
+    gotoxy(0, 0);
   int i;
   int j;
   printf("┌ ");
@@ -55,6 +55,27 @@ void draw_board() {
   for (i = 0; i < 17; i++)
     printf("┴ ");
   printf("┘");
+
+    for(i = 0; i < 19; i++) {
+        for(j = 0; j < 19; j++) {
+            if(array[i][j] == 1) {
+                gotoxy(j * 2, i);
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
+                printf("●");
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+            } else if(array[i][j] == 2) {
+                gotoxy(j * 2, i);
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);
+                printf("●");
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+            } else if(array[i][j] == 3) {
+                gotoxy(j * 2, i);
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 1);
+                printf("●");
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+            }
+        }
+    }
   gotoxy(0, 19);
 }
 
@@ -197,7 +218,7 @@ void game() {
     clearconsole();
     check = 1;
     turn = 1;
-    draw_board();
+    draw_board(board);
     while (1) {
       get_pos(&x, &y, board);
       gotoxy(x, y);
@@ -277,7 +298,8 @@ unsigned int WINAPI service(void *params) {
         int len = recv(s, recv_message, MAXWORD, 0);
         if (len > 0) {
           // TODO: Update screen
-          printf("%s\n", recv_message);
+            clearconsole();
+            draw_board(board);
         }
       } else if (ev.lNetworkEvents == FD_CLOSE) {
         printf("[i] Server has closed\n");
@@ -292,6 +314,7 @@ unsigned int WINAPI service(void *params) {
 
 
 int main(void) {
+    SetConsoleOutputCP(65001);
   char server_ip[256] = "127.0.0.1";
   char name[] = "client";
   unsigned int tid;
