@@ -18,6 +18,15 @@ int turn; //한번에 2개를 놓을 수 있으므로 이를 확인하기 위한
 int sock; // 소켓
 int board[19][19] = {0};
 
+void send_check() {
+  char data[2] = {'c',(char) (check + '0')};
+  send(sock, data, sizeof (data), 0);
+}
+
+void parse_check(const char data[2]) {
+  check = data[1] - '0';
+}
+
 void send_turn() {
   char data[2] = {'t',(char) (turn + '0')};
   send(sock, data, sizeof (data), 0);
@@ -161,6 +170,7 @@ void put_stone() {
     }
   }
   send_turn();
+  send_check();
   SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 }
 
@@ -308,9 +318,11 @@ unsigned int WINAPI service(void *params) {
       WSAEnumNetworkEvents(s, event, &ev);
       if (ev.lNetworkEvents == FD_READ) {
         int len = recv(s, recv_message, MAXWORD, 0);
-        if (*recv_message == 'T') {
+        if (*recv_message == 't') {
           parse_turn(recv_message);
-        } else {
+        } else if (*recv_message=='c') {
+          parse_check(recv_message);
+        }else {
           parse_board_data(recv_message);
           clearconsole();
           draw_board(board);
