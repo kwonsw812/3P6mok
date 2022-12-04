@@ -179,7 +179,7 @@ int read_client(int index) {
 
 unsigned int WINAPI recv_and_forward(void *arg) {
     int index = (int) arg;
-    char message[MAXBYTE], share_message[MAXBYTE];
+    char message[MAXWORD], share_message[MAXWORD];
     SOCKADDR_IN client_address;
     int addr_len = 0;
     char *tok1 = NULL;
@@ -187,7 +187,7 @@ unsigned int WINAPI recv_and_forward(void *arg) {
 
     memset(&client_address, 0, sizeof(client_address));
 
-    if (recv(sock_arr[index].s, message, MAXBYTE, 0) > 0) {
+    if (recv(sock_arr[index].s, message, MAXWORD, 0) > 0) {
         addr_len = sizeof(client_address);
         getpeername(sock_arr[index].s, (SOCKADDR *) &client_address, &addr_len);
         strcpy(share_message, message);
@@ -197,7 +197,7 @@ unsigned int WINAPI recv_and_forward(void *arg) {
         }
 
         for (int i = 0; i < total_socket_count; ++i) {
-            send(sock_arr[i].s, share_message, MAXBYTE, 0);
+            send(sock_arr[i].s, share_message, MAXWORD, 0);
         }
     }
 
@@ -206,7 +206,7 @@ unsigned int WINAPI recv_and_forward(void *arg) {
 
 void remove_client(int index) {
     char remove_ip[256];
-    char message[MAXBYTE];
+    char message[MAXWORD];
 
     strcpy(remove_ip, get_client_ip(index));
     printf("[i] Lose connection: %s\n", remove_ip);
@@ -246,7 +246,7 @@ int notify_client(char *message) {
 int main(void) {
     signal(SIGINT, interrupt);
     unsigned int tid;
-    char message[MAXBYTE] = "";
+    char message[MAXWORD] = "";
     HANDLE main_thread;
 
     main_thread = (HANDLE) _beginthreadex(

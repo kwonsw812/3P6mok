@@ -6,6 +6,7 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_FLAGS "-lwsock32")
 
 add_executable(3p6mok main.c)
+target_link_libraries(3p6mok wsock32 ws2_32)
 
 add_executable(server server.c)
 target_link_libraries(server wsock32 ws2_32)
