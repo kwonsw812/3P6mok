@@ -243,18 +243,20 @@ int client_init(char *ip, int port) {
 
 void send_board_data(int board[][19]) {
   char data[19 * 19];
+  int count = 0;
   for (int i = 0; i < 19; ++i) {
     for (int j = 0; j < 19; ++j) {
-      data[i + j] = (char) (board[i][j] + '0');
+      data[count++] = (char) (board[i][j] + '0');
     }
   }
   send(sock, data, sizeof(data), 0);
 }
 
 void parse_board_data(const char data[MAXWORD]) {
-  for (int i = 0; i < 19; ++i){
-    for(int j = 0; j < 19; ++j) {
-      board[i][j] = data[i+j]-'0';
+  int count = 0;
+  for (int i = 0; i < 19; ++i) {
+    for (int j = 0; j < 19; ++j) {
+      board[i][j] = data[count++] - '0';
     }
   }
 }
