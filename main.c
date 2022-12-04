@@ -17,6 +17,7 @@
 int check; //어떤 바둑돌의 차례인지 결정하는 변수
 int turn; //한번에 2개를 놓을 수 있으므로 이를 확인하기 위한 변수
 int sock; // 소켓
+int board[19][19] = {0};
 
 //게임 재시작을 위해 콘솔에 있는 내용을 지우는 함수
 void clearconsole() {
@@ -196,7 +197,6 @@ void game() {
     clearconsole();
     check = 1;
     turn = 1;
-    int board[19][19] = {0};
     draw_board();
     while (1) {
       get_pos(&x, &y, board);
@@ -249,6 +249,14 @@ void send_board_data(int board[][19]) {
     }
   }
   send(sock, data, sizeof(data), 0);
+}
+
+void parse_board_data(const char data[MAXWORD]) {
+  for (int i = 0; i < 19; ++i){
+    for(int j = 0; j < 19; ++j) {
+      board[i][j] = data[i+j]-'0';
+    }
+  }
 }
 
 unsigned int WINAPI service(void *params) {
