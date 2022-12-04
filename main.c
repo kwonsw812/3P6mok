@@ -18,6 +18,26 @@ int turn; //한번에 2개를 놓을 수 있으므로 이를 확인하기 위한
 int sock; // 소켓
 int board[19][19] = {0};
 
+void send_board_data(int board[][19]) {
+    char data[19 * 19];
+    int count = 0;
+    for (int i = 0; i < 19; ++i) {
+        for (int j = 0; j < 19; ++j) {
+            data[count++] = (char) (board[i][j] + '0');
+        }
+    }
+    send(sock, data, sizeof(data), 0);
+}
+
+void parse_board_data(const char data[MAXWORD]) {
+    int count = 0;
+    for (int i = 0; i < 19; ++i) {
+        for (int j = 0; j < 19; ++j) {
+            board[i][j] = data[count++] - '0';
+        }
+    }
+}
+
 //게임 재시작을 위해 콘솔에 있는 내용을 지우는 함수
 void clearconsole() {
   system("cls");
@@ -97,6 +117,7 @@ void get_pos(int *x, int *y, int board[][19]) {
             *x = xpos;
             *y = ypos;
             board[ypos][xpos / 2] = check;
+              send_board_data(board);
             break;
           }
         }
@@ -262,25 +283,6 @@ int client_init(char *ip, int port) {
   return server_socket;
 }
 
-void send_board_data(int board[][19]) {
-  char data[19 * 19];
-  int count = 0;
-  for (int i = 0; i < 19; ++i) {
-    for (int j = 0; j < 19; ++j) {
-      data[count++] = (char) (board[i][j] + '0');
-    }
-  }
-  send(sock, data, sizeof(data), 0);
-}
-
-void parse_board_data(const char data[MAXWORD]) {
-  int count = 0;
-  for (int i = 0; i < 19; ++i) {
-    for (int j = 0; j < 19; ++j) {
-      board[i][j] = data[count++] - '0';
-    }
-  }
-}
 
 unsigned int WINAPI service(void *params) {
   SOCKET s = (SOCKET) params;
@@ -298,6 +300,7 @@ unsigned int WINAPI service(void *params) {
         int len = recv(s, recv_message, MAXWORD, 0);
         if (len > 0) {
           // TODO: Update screen
+            parse_board_data(recv_message);
             clearconsole();
             draw_board(board);
         }
