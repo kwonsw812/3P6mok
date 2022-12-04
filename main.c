@@ -160,6 +160,7 @@ void put_stone() {
       turn = 0;
     }
   }
+  send_turn();
   SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 }
 
@@ -307,11 +308,12 @@ unsigned int WINAPI service(void *params) {
       WSAEnumNetworkEvents(s, event, &ev);
       if (ev.lNetworkEvents == FD_READ) {
         int len = recv(s, recv_message, MAXWORD, 0);
-        if (len > 0) {
-          // TODO: Update screen
+        if (len > 2) {
             parse_board_data(recv_message);
             clearconsole();
             draw_board(board);
+        } else {
+          parse_turn(*recv_message);
         }
       } else if (ev.lNetworkEvents == FD_CLOSE) {
         printf("[i] Server has closed\n");
