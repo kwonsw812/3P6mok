@@ -19,7 +19,7 @@ int sock; // 소켓
 int board[19][19] = {0};
 
 void send_check() {
-  char data[2] = {'c',(char) (check + '0')};
+  char data[MAXWORD] = {'c',(char) (check + '0')};
   send(sock, data, sizeof (data), 0);
 }
 
@@ -28,7 +28,7 @@ void parse_check(const char data[2]) {
 }
 
 void send_turn() {
-  char data[2] = {'t',(char) (turn + '0')};
+  char data[MAXWORD] = {'t',(char) (turn + '0')};
   send(sock, data, sizeof (data), 0);
 }
 
