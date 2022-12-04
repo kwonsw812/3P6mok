@@ -18,6 +18,15 @@ int turn; //한번에 2개를 놓을 수 있으므로 이를 확인하기 위한
 int sock; // 소켓
 int board[19][19] = {0};
 
+void send_turn() {
+  char data = (char)(turn + '0');
+  send(sock, &data, sizeof (data), 0);
+}
+
+void parse_turn(const char data) {
+  turn = data - '0';
+}
+
 void send_board_data(int board[][19]) {
     char data[19 * 19];
     int count = 0;
